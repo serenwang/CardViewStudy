@@ -1,55 +1,63 @@
 package com.example.myapplication;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.media.Image;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-    private List<Contact> contactlist = new ArrayList<>();
+    private DrawerLayout mDrawerLayout;
+    private Fruit[] fruits    = {new Fruit("樱桃", R.drawable.fruit1),
+            new Fruit("橘子", R.drawable.fruit2),
+            new Fruit("猕猴桃", R.drawable.fruit3),
+            new Fruit("南瓜", R.drawable.fruit4),
+            new Fruit("黄瓜", R.drawable.fruit5),
+            new Fruit("石榴", R.drawable.fruit6)};
+    private List<Fruit>  fruitList = new ArrayList<>();
+    private FruitAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        initContact();
-        ContactAdapter adapter = new ContactAdapter(MainActivity.this,
-                R.layout.contact_item, contactlist);
-        ListView listView = (ListView) findViewById(R.id.list_view);
-        listView.setAdapter(adapter);
+        initFruits();
+        RecyclerView      recyclerView  =(RecyclerView)findViewById(R.id.recycler_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new FruitAdapter(fruitList);
+        recyclerView.setAdapter(adapter);
     }
-    private void initContact() {
-        for (int i = 0; i < 10; i++) {
-            Contact apple = new Contact("墨雨", R.drawable.avatar1);
-            contactlist.add(apple);
-            Contact banana = new Contact("风扬帆影", R.drawable.avatar2);
-            contactlist.add(banana);
-            Contact orange = new Contact("星语心愿", R.drawable.avatar3);
-            contactlist.add(orange);
-            Contact watermelon = new Contact("青灯夜游", R.drawable.avatar4);
-            contactlist.add(watermelon);
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+    private void initFruits() {
+        fruitList.clear();
+        for (int i = 0; i < 50; i++) {
+            Random random = new Random();
+            int index = random.nextInt(fruits.length);
+            fruitList.add(fruits[index]);
         }
     }
+    
 }
